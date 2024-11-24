@@ -1,0 +1,9 @@
+[submodule "submodules/cutlass"]
+	path = submodules/cutlass
+	url = git@github.com:StarGazer1995/cutlass.git
+[submodule "submodules/llama.cpp"]
+	path = submodules/llama.cpp
+	url = git@github.com:StarGazer1995/llama.cpp.git
+[submodule "submodules/eigen"]
+	path = submodules/eigen
+	url = https://gitlab.com/libeigen/eigen.git
