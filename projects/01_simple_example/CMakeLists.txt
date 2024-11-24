@@ -1,5 +1,21 @@
-# Minimum CMake version
-cmake_minimum_required(VERSION 3.10)
+# Option 1: Include Eigen as a local header-only dependency
+set(EIGEN_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/submodules/eigen")
+
+if(NOT EXISTS "${EIGEN_INCLUDE_DIR}/Eigen")
+    message(STATUS "Eigen not found in '${EIGEN_INCLUDE_DIR}'. Fetching Eigen from GitLab...")
+    # Fetch Eigen
+    FetchContent_Declare(
+        Eigen
+        GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+        GIT_TAG main # Use 'main' or replace with a specific version like '3.4.0'
+    )
+    FetchContent_MakeAvailable(Eigen)
+    
+    # Set EIGEN_DIR to the fetched content
+    set(EIGEN_DIR ${eigen_SOURCE_DIR})
+else()
+    message(STATUS "Using Eigen from '${EIGEN_INCLUDE_DIR}'.")
+endif()
 
 # Option 2: Use find_package for system-installed Eigen (if available)
 # Uncomment the following lines if you want to use a system-installed version of Eigen instead
@@ -14,7 +30,4 @@ target_include_directories(my_eigen_app PRIVATE ${EIGEN_INCLUDE_DIR})
 # Uncomment the line below if using find_package
 # target_link_libraries(my_eigen_app PRIVATE Eigen3::Eigen)
 
-add_custom_command(TARGET my_eigen_app POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy
-                   ${CMAKE_BINARY_DIR}/compile_commands.json
-                   ${CMAKE_COMPILE_COMMANDS_OUTPUT_DIRECTORY}/${EXECUTABLE_NAME}.json)
+list(APPEND TARGET_LIST my_eigen_app)
