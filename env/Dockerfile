@@ -8,4 +8,7 @@ RUN cat /bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
 RUN mv bazel-archive-keyring.gpg /usr/share/keyrings
 RUN mkdir -p /etc/apt/sources.list.d/ && touch /etc/apt/sources.list.d/bazel.list
 RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8"  > /etc/apt/sources.list.d/bazel.list
-RUN apt update && apt install -y bazel
+RUN apt update && apt install -y bazel clangd-12
+RUN update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-12 100
+
+
