@@ -1,14 +1,16 @@
 #include <Eigen/Dense>
 #include <iostream>
+#include <glog/logging.h>
 
 int main() {
+    google::InitGoogleLogging(__FILE__);
     // Define the dimensions
     const int rowsA = 3, colsA = 2;
     const int rowsB = 2, colsB = 3;
 
     // Check if dimensions match for matrix multiplication (colsA == rowsB)
     if (colsA != rowsB) {
-        std::cerr << "Matrix dimensions do not match for multiplication!" << std::endl;
+        LOG(FATAL) << "Matrix dimensions do not match for multiplication!";
         return -1;
     }
 
