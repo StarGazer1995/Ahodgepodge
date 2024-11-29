@@ -1,26 +1,20 @@
 #include <cutlass/cutlass.h>
 #include <cutlass/gemm/device/gemm.h>
-#include "cutlass/util/reference/host/tensor_compare.h"
+#include <cutlass/util/host_tensor.h>
+#include <cutlass/util/reference/host/tensor_compare.h>
+#include <cutlass/util/reference/device/tensor_fill.h>
+#include <cutlass/util/reference/host/gemm.h>
 #include <iostream>
 #include <vector>
 
-// Check for CUDA errors
-#define CHECK_CUDA(call)                                                              \
-    {                                                                                 \
-        cudaError_t err = call;                                                       \
-        if (err != cudaSuccess) {                                                     \
-            std::cerr << "CUDA error at " << __FILE__ << ":" << __LINE__ << " : "     \
-                      << cudaGetErrorString(err) << std::endl;                        \
-            exit(EXIT_FAILURE);                                                       \
-        }                                                                             \
-    }
 using ElementType = float; // Data type for matrix elements
 using LayoutType = cutlass::layout::RowMajor; // Row-major matrix layout
-using Tensor = cutlass::Tensor;
+using Tensor = cutlass::HostTensor<ElementType, LayoutType>;
 
-cudaError_t device_gemm(int M, int N, int K, Tensor<ElementType, LayoutType>& A,
-                        Tensor<ElementType, LayoutType>& B,
-                        Tensor<ElementType, LayoutType>& C,
+cudaError_t device_gemm(int M, int N, int K,
+                        Tensor& A,
+                        Tensor& B,
+                        Tensor& C,
                         ElementType alpha, ElementType beta){
         // Define CUTLASS GEMM kernel
         using Gemm = cutlass::gemm::device::Gemm<
@@ -46,7 +40,7 @@ cudaError_t device_gemm(int M, int N, int K, Tensor<ElementType, LayoutType>& A,
         if (status != cutlass::Status::kSuccess) {
             return cudaErrorUnknown;
         }
-        status = gemm(args);
+        status = gemm_op(args);
         if (status != cutlass::Status::kSuccess) {
             return cudaErrorUnknown;
         }
@@ -63,10 +57,10 @@ int main() {
     ElementType alpha = 1.0f;
     ElementType beta = 0.0f;
     
-    Tensor<ElementType, LayoutType> A{cutlass::MatrixCoord(M, K)};
-    Tensor<ElementType, LayoutType> B{cutlass::MatrixCoord(K, N)};
-    Tensor<ElementType, LayoutType> C{cutlass::MatrixCoord(M, N)};
-    Tensor<ElementType, LayoutType> C_ref{cutlass::MatrixCoord(M, N)};
+    Tensor A{cutlass::MatrixCoord(M, K)};
+    Tensor B{cutlass::MatrixCoord(K, N)};
+    Tensor C{cutlass::MatrixCoord(M, N)};
+    Tensor C_ref{cutlass::MatrixCoord(M, N)};
 
     cutlass::reference::device::TensorFillRandomGaussian(A.device_view(), 10, 0, 1, 0);
     cutlass::reference::device::TensorFillRandomGaussian(B.device_view(), 10, 0, 1, 0);
@@ -105,30 +99,9 @@ int main() {
     char const *filename = "errors_01_cutlass_utilities.csv";
 
     std::cerr << "Error - CUTLASS GEMM kernel differs from reference. Wrote computed and reference results to '" << filename << "'" << std::endl;
-
-    //
-    // On error, print C_cutlass and C_reference to std::cerr.
-    //
-    // Note, these are matrices of half-precision elements stored in host memory as
-    // arrays of type cutlass::half_t.
-    //
-
-    // std::ofstream file(filename);
-
-    // // Result of CUTLASS GEMM kernel
-    // file << "\n\nCUTLASS =\n" << C_cutlass.host_view() << std::endl;
-
-    // // Result of reference computation
-    // file << "\n\nReference =\n" << C_reference.host_view() << std::endl;
-
-    // Return error code.
-    // return cudaErrorUnknown;
+  } else {
+    std::cout<< " The program finished successfully" <<std::endl;
   }
-
-    // // Free device memory
-    // CHECK_CUDA(cudaFree(device_A));
-    // CHECK_CUDA(cudaFree(device_B));
-    // CHECK_CUDA(cudaFree(device_C));
 
     return 0;
 }

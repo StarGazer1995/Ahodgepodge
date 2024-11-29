@@ -64,10 +64,9 @@ if (BUILD_GPU_GEMM)
     # Link CUDA libraries (optional if CUTLASS uses specific CUDA features)
     find_package(CUDA REQUIRED)
     # Set CUDA architecture (adjust for your GPU)
-    set(CUTLASS_NVCC_ARCHS 89) # For Ampere GPUs; adjust as necessary
-    set(CUTLASS_ENABLE_TESTS OFF)
-    set(CUTLASS_ENABLE_EXAMPLES OFF)
-
+    set(CUTLASS_NVCC_ARCHS "89" CACHE STRING "Set GPU artitectures") # For Ampere GPUs; adjust as necessary
+    set(CUTLASS_ENABLE_TESTS OFF CACHE BOOL "Disable CUTLASS tests")
+    set(CUTLASS_ENABLE_EXAMPLES OFF CACHE BOOL "Disable CUTLASS examples")
     add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/cutlass)
 endif()
 add_subdirectory(projects)
