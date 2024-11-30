@@ -1,0 +1,5 @@
+if (BUILD_TESTS)
+    set(dep Eigen3::Eigen)
+    message(STATUS "ADD 01_simple_test")
+    add_and_run_test(01_simple_example_test cpu_gemm_test.cpp ${dep})
+endif()
