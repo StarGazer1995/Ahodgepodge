@@ -21,7 +21,7 @@ file(MAKE_DIRECTORY ${CMAKE_COMPILE_COMMANDS_OUTPUT_DIRECTORY})
 
 option(BUILD_TESTS "Enable GTests" OFF)
 option(BUILD_CPU_GEMM "Build CPU-based GEMM using Eigen" ON)
-option(BUILD_GPU_GEMM "Build GPU-based GEMM using CUTLASS" OFF)
+option(BUILD_GPU_GEMM "Build GPU-based GEMM using CUTLASS" ON)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/glog)
 # add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/googletest)

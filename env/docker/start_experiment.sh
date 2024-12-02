@@ -1,7 +1,7 @@
 CONTAINER_HOSTNAME=$(whoami)_$(date "+%Y%m%d_%H%M%S")
 TEST_MODE=${1:-false}
-DOCKER_IMAGE=gongzhao1995/tensorrt/
-TAG=${2:-23.08-py3}
+DOCKER_IMAGE=gongzhao1995/pytorch
+TAG=${2:-24.08-py3}
 
 if [ ${TEST_MODE} = false ]; then
     docker run \

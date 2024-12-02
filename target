@@ -1,0 +1,72 @@
+#!/bin/bash
+
+set -e
+
+# Function to get the number of CPU cores (default to half the total cores)
+get_cpu_cores() {
+    echo $(($(nproc) / 2))
+}
+
+# Function to build the project
+build_project() {
+    local cores=$1
+    local target=$2
+
+    git submodule update
+    mkdir -p ./build
+
+    echo "Triggering compile process..."
+    pushd build > /dev/null
+    cmake ..
+    if [ -z "$target" ]; then
+        cmake --build . -- -j$cores
+    else
+        cmake --build . --target $target -- -j$cores
+    fi
+    popd > /dev/null
+}
+
+# Function to run the target
+run_target() {
+    local cores=$1
+    local target=$2
+
+    echo "Running target $target..."
+    pushd build > /dev/null
+    cmake --build . --target run_$target -- -j$cores
+    popd > /dev/null
+}
+
+# Function to run tests
+run_tests() {
+    echo "Running tests..."
+    pushd build > /dev/null
+    ctest
+    popd > /dev/null
+}
+
+# Main script
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <build|run|test> <target_name> [number_of_cores]"
+    exit 1
+fi
+
+action=$1
+target_name=$2
+cores=${3:-$(get_cpu_cores)}
+
+case $action in
+    build)
+        build_project $cores $target_name
+        ;;
+    run)
+        run_target $cores $target_name
+        ;;
+    test)
+        run_tests
+        ;;
+    *)
+        echo "Invalid action. Usage: $0 <build|run|test> <target_name> [number_of_cores]"
+        exit 1
+        ;;
+esac
