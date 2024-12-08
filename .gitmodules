@@ -13,3 +13,6 @@
 [submodule "submodules/glog"]
 	path = submodules/glog
 	url = https://github.com/google/glog.git
+[submodule "submodules/benchmark"]
+	path = submodules/benchmark
+	url = https://github.com/google/benchmark.git

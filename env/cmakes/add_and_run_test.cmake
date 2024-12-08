@@ -1,6 +1,5 @@
 
 function(add_and_run_test name srcs deps)
-    # set(test_name ${name}_test)
     add_executable(${name} ${srcs})
     if (deps)
         target_link_libraries(${name} PRIVATE ${deps})

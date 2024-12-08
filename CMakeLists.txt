@@ -19,15 +19,16 @@ endforeach()
 # Ensure the custom directory exists
 file(MAKE_DIRECTORY ${CMAKE_COMPILE_COMMANDS_OUTPUT_DIRECTORY})
 
-option(BUILD_TESTS "Enable GTests" OFF)
+option(BUILD_TESTS "Enable GTests" ON)
 option(BUILD_CPU_GEMM "Build CPU-based GEMM using Eigen" ON)
-option(BUILD_GPU_GEMM "Build GPU-based GEMM using CUTLASS" ON)
+option(BUILD_GPU_GEMM "Build GPU-based GEMM using CUTLASS" OFF)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/glog)
 # add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/googletest)
 
 if (BUILD_TESTS)
     add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/googletest)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/benchmark)
     enable_testing()
 endif()
         

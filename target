@@ -4,7 +4,8 @@ set -e
 
 # Function to get the number of CPU cores (default to half the total cores)
 get_cpu_cores() {
-    echo $(($(nproc) / 2))
+    # echo $(($(nproc) / 2))
+    echo "12"
 }
 
 # Function to build the project
@@ -45,9 +46,18 @@ run_tests() {
     popd > /dev/null
 }
 
+run_bench() {
+    local cores=$1
+    local target=$2
+    echo "Running benchmark..."
+    pushd build > /dev/null
+    cmake --build . --target bench_${target} -- -j$cores
+    popd > /dev/null
+}
+
 # Main script
 if [ $# -lt 1 ]; then
-    echo "Usage: $0 <build|run|test> <target_name> [number_of_cores]"
+    echo "Usage: $0 <build|run|test|bench> <target_name> [number_of_cores]"
     exit 1
 fi
 
@@ -65,8 +75,11 @@ case $action in
     test)
         run_tests
         ;;
+    bench)
+        run_bench $cores $target_name
+        ;;
     *)
-        echo "Invalid action. Usage: $0 <build|run|test> <target_name> [number_of_cores]"
+        echo "Invalid action. Usage: $0 <build|run|test|bench> <target_name> [number_of_cores]"
         exit 1
         ;;
 esac
