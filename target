@@ -51,7 +51,7 @@ run_bench() {
     local target=$2
     echo "Running benchmark..."
     pushd build > /dev/null
-    cmake --build . --target bench_${target} -- -j$cores
+    cmake --build . --target bench_${target}_bench -- -j$cores
     popd > /dev/null
 }
 
