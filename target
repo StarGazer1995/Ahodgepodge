@@ -18,8 +18,9 @@ build_project() {
 
     echo "Triggering compile process..."
     pushd build > /dev/null
-    cmake ..
     if [ -z "$target" ]; then
+        cmake ..
+    elif [ "$target" = "all" ]; then
         cmake --build . -- -j$cores
     else
         cmake --build . --target $target -- -j$cores

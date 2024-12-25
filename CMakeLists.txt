@@ -22,9 +22,9 @@ file(MAKE_DIRECTORY ${CMAKE_COMPILE_COMMANDS_OUTPUT_DIRECTORY})
 option(BUILD_TESTS "Enable GTests" ON)
 option(BUILD_CPU_GEMM "Build CPU-based GEMM using Eigen" ON)
 option(BUILD_GPU_GEMM "Build GPU-based GEMM using CUTLASS" OFF)
+option(BUILD_LLAMA "Build LLAMACPP" ON)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/glog)
-# add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/googletest)
 
 if (BUILD_TESTS)
     add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/googletest)
@@ -48,6 +48,14 @@ if (BUILD_CPU_GEMM)
     set(EIGEN_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/submodules/eigen")
     add_subdirectory(${EIGEN_INCLUDE_DIR})
     message(STATUS "Using Eigen from ${EIGEN_INCLUDE_DIR}.")
+endif()
+
+if (BUILD_LLAMA)
+
+    set(LLAMA_DIR "${CMAKE_SOURCE_DIR}/submodules/llama.cpp")
+    message(STATUS "Add llama.cpp into environment")
+    add_subdirectory(${LLAMA_DIR})
+    set(LLAMA_LIB llama)
 endif()
 
 add_subdirectory(projects)
