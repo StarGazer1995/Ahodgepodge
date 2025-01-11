@@ -16,3 +16,6 @@
 [submodule "submodules/benchmark"]
 	path = submodules/benchmark
 	url = https://github.com/google/benchmark.git
+[submodule "submodules/whisper"]
+	path = submodules/whisper
+	url = https://github.com/openai/whisper.git
