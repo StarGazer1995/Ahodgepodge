@@ -1,6 +1,6 @@
-from .function_call import get_location_based_on_ip, get_weather
+from .function_call import get_location_based_on_ip, get_weather, get_search_results
 
-__all__ = ["get_location_based_on_ip", "get_weather"]
+__all__ = ["get_location_based_on_ip", "get_weather", "get_search_results"]
 
 tools = [
     {
@@ -12,13 +12,13 @@ tools = [
                 "type": "object",
                 "properties": {}
             },
-    }
+        }
     },
     {
         "type": "function",
         "function": {
             "name": "get_weather",
-            "description": "Get weather of an location, the user shoud supply a location first",
+            "description": "Get weather of a location, the user should supply a location first",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -26,26 +26,34 @@ tools = [
                         "type": "string",
                         "description": "The city and state, e.g. San Francisco, CA",
                     }
-                }
+                },
+                "required": ["location"]
             },
         }
     },
     {
         "type": "function",
         "function": {
-            "name": "get_location_based_on_ip",
-            "description": "Get the location based on the user's IP address",
+            "name": "get_search_results",
+            "description": "Retrieve search results for a given keyword using the Google Custom Search API",
             "parameters": {
                 "type": "object",
-                "properties": {}
+                "properties": {
+                    "keyword": {
+                        "type": "string",
+                        "description": "The search term or phrase to query",
+                    }
+                },
+                "required": ["keyword"]
             },
         }
-    },
+    }
 ]
 
 functions = {
     "get_weather": get_weather,
     "get_location_based_on_ip": get_location_based_on_ip,
+    "get_search_results": get_search_results,
 }
 
 

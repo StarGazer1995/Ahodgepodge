@@ -13,3 +13,4 @@ CMakeUserPresets.json
 build
 *cache*
 my_token.py
+.DS_Store
